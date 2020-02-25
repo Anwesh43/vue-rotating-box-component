@@ -1,4 +1,10 @@
-const scGap = 0.02
+const scGap = 0.02]
+const w = window.innerWidth
+const h = window.innerHeight
+const sizeFactor = 8
+
+const sinify = (scale) => Math.sin(Math.PI * scale)
+
 class State {
 
     scale = 0
@@ -43,3 +49,41 @@ class Animator {
 
     }
 }
+
+const squareStyle = (scale) => {
+    const border = '1px solid #01579B'
+    const size = `${Math.min(w, h) / sizeFactor}`
+    const width = `${size}px`
+    const height = `${size}px`
+    const position = 'absolute'
+    const top = `${w / 2 - size / 2}px`
+    const left = `${h / 2 - size / 2}px`
+    const WebkitTransform = `rotate(${90 * }deg)`
+    return {width, height, border, WebkitTransform, position, top, left}
+}
+
+Vue.component('rotating-square-component', {
+    template : '#rotatingSquareBox',
+
+    data() {
+        return {state : new State(), squareStyle : squareStyle(0)}
+    },
+
+    methods : {
+        update() {
+            this.squareStyle = squareStyle(this.state.scale)
+            this.state.update(() => {
+                this.animator.stop()
+                this.squareStyle = squareStyle(this.state.scale)
+            })
+        },
+
+        start() {
+            this.state.startUpdating(() => {
+                this.animator.start(() => {
+                    this.update()
+                })
+            })
+        }
+    }
+})
