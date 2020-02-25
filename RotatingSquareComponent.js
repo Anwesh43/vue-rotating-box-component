@@ -1,7 +1,8 @@
-const scGap = 0.02]
+const scGap = 0.02
 const w = window.innerWidth
 const h = window.innerHeight
 const sizeFactor = 8
+const delay = 30
 
 const sinify = (scale) => Math.sin(Math.PI * scale)
 
@@ -56,12 +57,13 @@ const squareStyle = (scale) => {
     const width = `${size}px`
     const height = `${size}px`
     const position = 'absolute'
-    const top = `${w / 2 - size / 2}px`
-    const left = `${h / 2 - size / 2}px`
-    const WebkitTransform = `rotate(${90 * }deg)`
+    const top = `${h / 2 - size / 2}px`
+    const left = `${w / 2 - size / 2}px`
+    const WebkitTransform = `rotate(${90 * sinify(scale)}deg)`
     return {width, height, border, WebkitTransform, position, top, left}
 }
 
+const animator = new Animator()
 Vue.component('rotating-square-component', {
     template : '#rotatingSquareBox',
 
@@ -71,19 +73,24 @@ Vue.component('rotating-square-component', {
 
     methods : {
         update() {
+            console.log(this.state.scale)
             this.squareStyle = squareStyle(this.state.scale)
             this.state.update(() => {
-                this.animator.stop()
+                animator.stop()
                 this.squareStyle = squareStyle(this.state.scale)
             })
         },
 
         start() {
             this.state.startUpdating(() => {
-                this.animator.start(() => {
+                animator.start(() => {
                     this.update()
                 })
             })
         }
     }
+})
+
+const app = new Vue({
+    el : '#app'
 })
